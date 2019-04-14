@@ -1,0 +1,81 @@
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+2 - Curso ASP.NET MVC 5 - Aula 1
+
+4 - Domain
+
+Projeto: EP.CursoMvc.Domain
+
+Interfaces
+
+IRepositoryRead e IRepositoryWrite : Define as interfaces genéricas para qualquer entidade (TEntity que herda de Entity)
+IClientRepository : Define as interfaces específicas de uma entidade
+
+Models
+
+Entity : É a entidade mais genérica que cordena as demais entidades (Cliente,Endereco), permite definir métodos para 
+validações de erro, retorno de mensagens, verificação da validade da entidade, cria chave primária da entidade e tudo
+o que você considerar genérico para as entidades
+
+Cliente e Endereco: Define as propriedades/métodos específicos das entidades, define o relacionamento entre
+o cliente e endereço para que o EF entenda
+
+5 - 5.1 - Data
+
+Projeto: EP.CursoMvc.Infra.Data
+
+Context
+
+CursoMvcContext : Define convenções para a migration, tais como:
+
+Não tenta colocar no plurar o nome de entidades
+Não gerar comandos em castata no banco (delete on cascade por exemplo)
+Troca o tipo padrão nvarchar para varchar
+Informa a quantidade máxima de caracteres das propriedades (senão o EF coloca o termo Max)
+Informa o nome do schema que serão criados os objetos
+Indica a classe de configurações específicas por entidade (para por exemplo
+sobrescrever o tamanho máximo de 100 por algo mais específico)
+Inclui validação específica no SaveChanges para colocar a data/hora atual de todas as entidades que possuirem
+o campo DataCadastro
+
+Mappings
+
+ClienteMapping : Define especificidades das propriedades, tais como:
+
+Chave Primária (se o nome da propriedade for Id não é obrigatório)
+Torna propriedades requeridas
+Especifica tamanho de propriedades diferente do padrão que é 100 no contexto
+Define se é obrigatório preencher todas as posições da propriedade
+Criação de índices
+Define o nome da tabela
+
+EnderecoMapping : Define especificidades das propriedades, tais como:
+
+Tudo que foi descrito em ClienteMapping
+Relacionamento Um para Muitos entre Cliente e Endereço é definido na tabela filha
+Exemplos : https://github.com/EduardoPires/EF.MVC.Mappings/tree/master/MVC.EF.Mappings/Models/EntityConfig
+
+Migrations
+
+Configuration : Define configurações específicas para as migrations, tais como:
+
+AutomaticMigrationsEnabled = true
+Possíveis seeds para criação de dados iniciais, se necessário
+
+Repository : Implementa as interfaces
+
+ClienteRepository : Implementa os métodos das interfaces:
+
+Repository<Cliente> : Métodos genéricos para todas as entidades
+IClienteRepository : Métodos específicos para o cliente
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------

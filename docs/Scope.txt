@@ -1,0 +1,10 @@
+Cadastro de Clientes Escopo Geral
+
+Cliente possui um ou mais endereços
+Cliente não pode ser menor de idade
+Cliente não pode ter o mesmo CPF cadastrado 2x
+
+Validar todas as ações do cliente
+Nunca retornar exceptions
+Todo tratamento tem que ser feito por mensagens personalizadas
+

@@ -1,0 +1,16 @@
+Início Técnico
+1) Começei criando um projeto do tipo Class Library .Net Framework na camada 4 - Domain com o nome EP.CursoMvc.Domain onde:
+
+EP => Nome da Empresa (Eduardo Pires Treinamentos):
+CursoMvc => Nome do Projeto
+Domain => Nome da Camada
+
+POCO => Plain Old CLR Object (Bom e Velho Objeto CLR (Assembly do .Net))
+
+2) Retirei todas as referências menos o System e o Analysers
+
+3) Criei um outro projeto dentro de 5.1 de nome EP.CursoMvc.Infra.Data e instalei o Entity Framework:
+
+3.1) install-package entityframework dentro de 5 - Infra\5.1 - Data
+3.2) enable-migration
+3.3) update-database -Script (apenas gera o script para sua análise, é bom para evitar retrabalhos)
