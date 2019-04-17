@@ -5,6 +5,10 @@ namespace EP.CursoMvc.Domain.Models
 {
     public class Cliente : Entity
     {
+        public Cliente()
+        {
+            Enderecos = new List<Endereco>();
+        }
         public string Nome { get; set; }
         public string Email { get; set; }
         public string CPF { get; set; }

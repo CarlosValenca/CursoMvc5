@@ -16,10 +16,92 @@ Relacionamentos no EF
 // MANY TO MANY : Um cliente pode ter vários endereços e estes endereços podem ser de vários clientes
 // Exemplos : https://github.com/EduardoPires/EF.MVC.Mappings/tree/master/MVC.EF.Mappings/Models/EntityConfig
 --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Camada MVC : Aqui na tela não faremos um post direto na camada domain, o MVC não enxerga o cliente,
+para passar para frente os dados de cliente nós passamos através do objeto Cliente View Model, que é
+um espelho do cliente mas mais simples, sem métodos, sem construtor, é como se fosse uma DTO - Data
+Transformation Object (Objeto de transporte, sacola de dados)
+
+Camada Application : Cliente View Model, converterá o modelo passado pelo MVC a camada de domínio
+
+Camada Domain : Temos uma entidade Cliente, que receberá da Cliente View Model o post do usuário que
+será persistido no banco de dados
+
+File: ExplicacaoMvc5Basico
+
+Utilizamos este tipo de arquitetura pois o formulário só pode ter um único modelo,
+se temos Clientes e Endereços e desejamos trabalhar com os 2 ao mesmo tempo em uma
+só tela criaremos uma view model ClienteEnderecoViewModel
+
+A View Model é a Model da View (transforma informação de formulários através dos modelos que temos no domínio)
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------
+O Dapper foi criado pela empresa Stack Overflow, que utiliza .Net Mvc 5 com Dapper para as consultas
+É um site gigante, com muitos acessos a dúvidas de várias linguagens de progamação em várias línguas
+diferentes.
+
+https://github.com/StackExchange/Dapper
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------
+Código usando Dapper comentado com exemplo de MVC para não poluir o código fonte
+public override Cliente ObterPorId(Guid id)
+{
+    // 0 = False; 1 = True;
+    // o comando ansi left join (relacione tab1 com tab2 traz informação mesmo qdo tab2 não tem
+    // informação pra trazer. O "on" substitui a cláusula where
+    // o @uid será passado no return abaixo
+    var sql = @"select * from clientes c left join enderecos e " +
+                // Aqui estamos utilizando o uid como parâmetro para evitar ataques de sql injection
+                "on c.id = e.clienteid and c.id = @uid and c.excluido = 0 and c.ativo = 1";
+
+    // Estamos retornando via dapper o cliente e o endereco, o terceiro parâmetro indica qual objeto irá receber o retorno
+	// Está limitado a 8 parâmetros, sendo 7 objetos relacionados e 1 objeto de retorno
+    return Db.Database.Connection.Query<Cliente, Endereco, Cliente>(sql,
+        (c, e) =>
+        {
+            // Estamos colocando o retorno no objeto cliente que tem a capacidade de abrigar um endereço
+            c.AdicionarEndereco(e);
+            return c;
+            // Estamos informando para o uid da variável sql qual é o id
+        }, new { uid = id }).FirstOrDefault();
+
+    // AsNoTracking : Não cria o tracking pelo EF, melhora a performance
+    // código comentado para sabermos como pesquisar usando EF
+    // return Db.Clientes.AsNoTracking().Include("Enderecos").FirstOrDefault(c => c.Id == id);
+}
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SEO => Search Engine Optimizing
+
+Motor do mecanismo de busca do google, bing, etc
+
+SEO é utilizado para dar visibilidade as suas aplicações
+
+É bom que as palavras chaves principais estejam no título, na url, nos metadados, etc
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Criando Rotas
+
+Para começar é necessário incluir o comando routes.MapMvcAttributeRoutes() dentro de RoutConfig
+
+Você pode colocar acima da action comandos como:
+
+[Route = ("cadastrar")]
+
+[Route = ("editar\{id:guid}")]
+
+Utilizando autorizações:
+
+Depois disto você pode:
+
+[Authorize] => Só permite a action a usuários logados
+
+[AllowAnonymous] => Permite uma action específica
+
+[Authorize("Admin,Gestor")] => Só permite a action a usuários logados e com a role Admin ou Gestor
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------

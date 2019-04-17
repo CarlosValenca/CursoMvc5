@@ -1,4 +1,5 @@
-﻿using EP.CursoMvc.Domain.Interfaces;
+﻿using Dapper;
+using EP.CursoMvc.Domain.Interfaces;
 using EP.CursoMvc.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,18 @@ namespace EP.CursoMvc.Infra.Data.Repository
     {
         public IEnumerable<Cliente> ObterAtivos()
         {
-            return Buscar(c => c.Ativo);
+            // 0 = False; 1 = True;
+            var sql =  @"select * " +
+                        "from clientes c " +
+                        "where c.excluido = 0 and c.ativo = 1";
+
+            // Db.Database.Connection pega emprestado a conexão aberta pelo EF
+            // o Query já é do dapper
+            // Estamos usando o dapper para aumentar a performance das
+            // consultas em relação ao EF
+            return Db.Database.Connection.Query<Cliente>(sql);
+
+            // return Buscar(c => c.Ativo);
         }
 
         public Cliente ObterPorCpf(string cpf)
@@ -25,10 +37,19 @@ namespace EP.CursoMvc.Infra.Data.Repository
         }
 
         // Aqui ao invés de retornar somente o cliente pelo método da super classe retornaremos o cliente junto com o endereço
-        public override Cliente ObterPorId(Guid Id)
+        public override Cliente ObterPorId(Guid id)
         {
-            // AsNoTracking : Não cria o tracking pelo EF, melhora a performance
-            return Db.Clientes.AsNoTracking().Include("Endereco").FirstOrDefault(c => c.Id == Id);
+            // Consulte explanations.txt para maiores detalhes sobre o EF e o Dapper
+
+            var sql = @"select * from clientes c left join enderecos e " +
+                       "on c.id = e.clienteid and c.id = @uid and c.excluido = 0 and c.ativo = 1";
+
+            return Db.Database.Connection.Query<Cliente, Endereco, Cliente>(sql,
+                (c, e) =>
+                {
+                    c.AdicionarEndereco(e);
+                    return c;
+                }, new { uid = id }).FirstOrDefault();
         }
 
         public override void Remover(Guid id)

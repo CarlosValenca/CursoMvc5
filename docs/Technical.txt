@@ -14,3 +14,29 @@ POCO => Plain Old CLR Object (Bom e Velho Objeto CLR (Assembly do .Net))
 3.1) install-package entityframework dentro de 5 - Infra\5.1 - Data
 3.2) enable-migration
 3.3) update-database -Script (apenas gera o script para sua análise, é bom para evitar retrabalhos)
+
+4) Criei um outro projeto em 3 - Application de nome EP.CursoMvc.Application e instalei o AutoMapper
+
+4.1) Install-Package automapper (em 3 - Application \ EP.CursoMvc.Application)
+
+5) Criei um outro projeto em 1 - Presentation \ EP.CursoMvc.UI.Site
+
+5.1) Alterei o Web.config a parte de conexão com o banco alterando os nomes padrões em DataDirectory
+e Catalog para cursoMvc
+
+5.2) Rodar o comando update-database para gerar as tabelas de Cliente/Endereco
+em 5 - Infra\5.1 - EP.CursoMvc.Infra.Data
+
+5.3) Em 1 - Presentation\Ep.CursoMvc.Ui.Site
+5.3.1) Em controller vou adicionar via scaffold com views todas as controllers padrões
+5.3.2) No contexto vou usar o contexto existente do Identity (apenas um workaround...)
+5.3.3) Em ApplicationDbContext apagar a propriedade criada no scaffold
+5.3.4) Na ClientesController remover o parâmetro db baseado em ApplicationDbContext
+
+6) Em 5 - Infra\5.1 - EP.CursoMvc.Infra.Data rodar o comando para instalar o Dapper:
+
+install-package dapper
+
+7) No projeto 5 \ 5.2 \ EP.CursoMvc.Infra.CrossCutting.Filters instalar o Mvc:
+
+install-package Microsoft.AspNet.Mvc

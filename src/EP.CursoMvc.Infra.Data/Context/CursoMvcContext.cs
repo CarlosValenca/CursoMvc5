@@ -9,6 +9,24 @@ namespace EP.CursoMvc.Infra.Data.Context
 {
     public class CursoMvcContext : DbContext
     {
+        // Considera a DefaultConnection registrada no Web.config do projeto de apresentação
+        // uma vez que este projeto esteja como Startup Project, se não for o caso considerará a 
+        // Web.config do projeto que estiver como Startup Project
+        public CursoMvcContext() : base("DefaultConnection")
+        {
+            // Parâmetros para aumentar a performance
+            // Se necessário você pode entrar num método específico e habilitar
+            // um dos três parâmetros abaixo
+
+            // Não vai criar por padrão um proxy
+            Configuration.ProxyCreationEnabled = false;
+
+            // Não vai habilitar o lazy loading
+            Configuration.LazyLoadingEnabled = false;
+
+            // Não vai fazer tracking
+            Configuration.AutoDetectChangesEnabled = false;
+        }
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
 
