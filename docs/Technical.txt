@@ -40,3 +40,23 @@ install-package dapper
 7) No projeto 5 \ 5.2 \ EP.CursoMvc.Infra.CrossCutting.Filters instalar o Mvc:
 
 install-package Microsoft.AspNet.Mvc
+Adicionar 2 assemblies: System.Web e System.Web.Assemblies
+
+8) Para trabalhar com o mecanismo de injeção de dependência no Mvc do .Net Framework instalar
+
+1 - Presentation\EP.CursoMvc.UI.Site: Install-Package SimpleInjector.MVC3
+
+Referências:
+
+https://www.nuget.org/packages/SimpleInjector.MVC3/
+
+https://simpleinjector.org/index.html
+
+9) Para trabalhar com o mecanismo de injeção de dependência SIMPLES no .Net Framework instalar
+
+5\5.2 - CrossCutting\EP.CursoMvc.Infra.CrossCutting.IoC: Install-Package SimpleInjector
+
+10) Implementar em 4 - Domain\EP.CursoMvc.Domain e 3 - Application\EP.CursoMvc.Application e na 1 - Presentation\EP.CursoMvc.UI.Site o seguinte comando:
+
+Install-Package DomainValidation
+

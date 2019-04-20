@@ -103,6 +103,34 @@ Depois disto você pode:
 [Authorize("Admin,Gestor")] => Só permite a action a usuários logados e com a role Admin ou Gestor
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
+Olha quanto código foi comentado ao adicionar o pacote Nuget criado pelo Eduardo Pires : DomainValidation
+
+public override bool EhValido()
+{
+    ValidationResult = new ClienteEstaConsistenteValidation().Validate(this);
+
+    return ValidationResult.IsValid;
+
+    //if (string.IsNullOrWhiteSpace(Nome))
+    //    AdicionarErroValidacao("Nome", "O nome não pode estar vazio");
+
+    //if (string.IsNullOrWhiteSpace(Email))
+    //    AdicionarErroValidacao("Email", "O e-mail não pode estar vazio");
+
+    //if (!Value_Objects.CPF.Validar(CPF))
+    //    AdicionarErroValidacao("CPF", "O CPF é inválido");
+
+    //if (!Value_Objects.Email.Validar(Email))
+    //    AdicionarErroValidacao("Email", "O E-mail é inválido");
+
+    //return ValidationResult.Count == 0;
+
+}
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------

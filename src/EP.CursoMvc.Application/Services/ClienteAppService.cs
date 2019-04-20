@@ -3,7 +3,6 @@ using EP.CursoMvc.Application.Interfaces;
 using EP.CursoMvc.Application.ViewModels;
 using EP.CursoMvc.Domain.Interfaces;
 using EP.CursoMvc.Domain.Models;
-using EP.CursoMvc.Infra.Data.Repository;
 using System;
 using System.Collections.Generic;
 
@@ -13,10 +12,13 @@ namespace EP.CursoMvc.Application.Services
     public class ClienteAppService : AppServiceBase, IClienteAppService
     {
         private readonly IClienteRepository _clienteRepository;
+        private readonly IClienteService _clienteService;
 
-        public ClienteAppService()
+        public ClienteAppService(IClienteRepository clienteRepository,
+                                 IClienteService clienteService)
         {
-            _clienteRepository = new ClienteRepository();
+            _clienteRepository = clienteRepository;
+            _clienteService = clienteService;
         }
 
         public IEnumerable<ClienteViewModel> ObterAtivos()
@@ -68,9 +70,14 @@ namespace EP.CursoMvc.Application.Services
             cliente.DefinirComoAtivo();
             cliente.AdicionarEndereco(endereco);
 
-            if (!cliente.EhValido()) return clienteEnderecoViewModel;
+            var clienteReturn = _clienteService.Adicionar(cliente);
 
-            _clienteRepository.Adicionar(cliente);
+            if(!clienteReturn.ValidationResult.IsValid)
+            {
+                // Em caso de erros estou devolvendo eles para a camada de apresentação na classe ClienteViewModel
+                clienteEnderecoViewModel.Cliente.ValidationResult = clienteReturn.ValidationResult;
+            }
+
             return clienteEnderecoViewModel;
         }
 
@@ -79,19 +86,21 @@ namespace EP.CursoMvc.Application.Services
             // Aqui estamos extraindo o cliente de domínio
             var cliente = Mapper.Map<Cliente>(clienteViewModel);
             if (!cliente.EhValido()) return clienteViewModel;
-            _clienteRepository.Atualizar(cliente);
+            _clienteService.Atualizar(cliente);
             return clienteViewModel;
         }
 
         public void Remover(Guid id)
         {
-            _clienteRepository.Remover(id);
+            _clienteService.Remover(id);
         }
         public void Dispose()
         {
             // Controller terminou de usar, mata app service que mata o repository que mata o contexto do banco de dados
             // para que a memória fique melhor gerenciada
             _clienteRepository.Dispose();
+            // ssbcvp - confirmar se deixa ou não este código
+            _clienteService.Dispose();
         }
 
     }

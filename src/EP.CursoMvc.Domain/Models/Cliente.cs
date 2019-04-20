@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EP.CursoMvc.Domain.Validations.Clientes;
+using System;
 using System.Collections.Generic;
 
 namespace EP.CursoMvc.Domain.Models
@@ -23,7 +24,7 @@ namespace EP.CursoMvc.Domain.Models
         {
             if (!endereco.EhValido())
             {
-                ValidationResult = endereco.ValidationResult;
+                AdicionarErrosValidacao(endereco.ValidationResult);
                 return;
             }
 
@@ -44,13 +45,10 @@ namespace EP.CursoMvc.Domain.Models
 
         public override bool EhValido()
         {
-            if (string.IsNullOrWhiteSpace(Nome))
-                AdicionarErroValidacao("Nome", "O nome não pode estar vazio");
+            ValidationResult = new ClienteEstaConsistenteValidation().Validate(this);
 
-            if (string.IsNullOrWhiteSpace(Email))
-                AdicionarErroValidacao("Email", "O e-mail não pode estar vazio");
+            return ValidationResult.IsValid;
 
-            return ValidationResult.Count == 0;
         }
     }
 }

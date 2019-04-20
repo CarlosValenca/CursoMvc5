@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DomainValidation.Validation;
+using System;
 
 namespace EP.CursoMvc.Domain.Models
 {
@@ -8,20 +8,26 @@ namespace EP.CursoMvc.Domain.Models
         protected Entity()
         {
             Id = Guid.NewGuid();
-            ValidationResult = new Dictionary<string, string>();
+            ValidationResult = new ValidationResult();
         }
 
         public Guid Id { get; set; }
-        public IDictionary<string, string> ValidationResult { get; set; }
+        public ValidationResult ValidationResult { get; set; }
 
         public void AdicionarErroValidacao(string erro, string mensagem)
         {
-            ValidationResult.Add(erro, mensagem);
+            ValidationResult.Add(new ValidationError(mensagem));
+        }
+
+        // Estamos utilizando o pacote Nuget do Eduardo Pires DomainValidation
+        public void AdicionarErrosValidacao(ValidationResult validationResult)
+        {
+            ValidationResult.Add(validationResult);
         }
 
         public void ZerarListaErros()
         {
-            ValidationResult = new Dictionary<string, string>();
+            ValidationResult = new ValidationResult();
         }
 
         public abstract bool EhValido();

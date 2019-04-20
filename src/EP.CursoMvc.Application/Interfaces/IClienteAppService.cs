@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace EP.CursoMvc.Application.Interfaces
 {
-    internal interface IClienteAppService : IDisposable
+    public interface IClienteAppService : IDisposable
     {
         ClienteEnderecoViewModel Adicionar(ClienteEnderecoViewModel clienteEnderecoViewModel);
         ClienteViewModel ObterPorId(Guid id);

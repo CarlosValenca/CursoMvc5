@@ -18,13 +18,8 @@ namespace EP.CursoMvc.Domain.Models
 
         public override bool EhValido()
         {
-            if (string.IsNullOrWhiteSpace(Logradouro))
-                AdicionarErroValidacao("Logradouro", "O nome não pode estar vazio");
-
-            if (string.IsNullOrWhiteSpace(CEP))
-                AdicionarErroValidacao("CEP", "O CEP não pode estar vazio");
-
-            return ValidationResult.Count == 0;
+            // Ficará assim temporariamente
+            return true;
         }
     }
 }

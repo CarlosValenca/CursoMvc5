@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<EP.CursoMvc.Application.ViewModels.ClienteViewModel>
+@using EP.CursoMvc.Infra.CrossCutting.Filters
 
 @{
     ViewBag.Title = "Index";
@@ -6,9 +7,16 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@* Utilizamos o IfClaim aqui para determinar se o link Create New aparecerá para o usuário conectado *@
+@{ 
+    if (this.IfClaim("Clientes", "IN"))
+    {
+        <p>
+            @Html.ActionLink("Create New", "Create")
+        </p>
+    }
+}
+
 <table class="table">
     <tr>
         <th>
@@ -26,26 +34,32 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nome)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CPF)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Datanascimento)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CPF)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Datanascimento)
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-warning" @Html.Raw(this.IfClaimShow("Clientes","ED"))>Editar</a>
+                <a href="@Url.Action("Details", new { id = item.Id })" class="btn btn-primary" @Html.Raw(this.IfClaimShow("Clientes","DE"))>Detalhes</a>
+                <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-danger" @Html.Raw(this.IfClaimShow("Clientes","EX"))>Excluir</a>
+
+                @* O IfClaimHelper é um método para extender a classe MvcHtmlString *@
+                @*@Html.ActionLink("Edit", "Edit" , new { id=item.Id }).IfClaimHelper("Clientes", "ED" )
+                @Html.ActionLink("Details", "Details" , new { id=item.Id }).IfClaimHelper("Clientes", "DE" )
+                @Html.ActionLink("Delete", "Delete" , new { id=item.Id }).IfClaimHelper("Clientes", "DE" )*@
+            </td>
+        </tr>
+    }
 
 </table>

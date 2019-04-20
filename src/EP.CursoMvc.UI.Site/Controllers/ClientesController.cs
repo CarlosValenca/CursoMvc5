@@ -1,5 +1,7 @@
-﻿using EP.CursoMvc.Application.Services;
+﻿using DomainValidation.Validation;
+using EP.CursoMvc.Application.Interfaces;
 using EP.CursoMvc.Application.ViewModels;
+using EP.CursoMvc.Infra.CrossCutting.Filters;
 using System;
 using System.Web.Mvc;
 
@@ -9,16 +11,17 @@ namespace EP.CursoMvc.UI.Site.Controllers
     [RoutePrefix("area-administrativa/gestao-clientes")]
     // Estou pedindo que o usuário esteja conectado no Identity para usar as actions abaixo
     [Authorize]
-    public class ClientesController : Controller
+    public class ClientesController : BaseController
     {
-        private readonly ClienteAppService _clienteAppService;
+        // LI : Listar, DE : Detalhes, IN : Incluir, ED : Editar, EX : Excluir
+        private readonly IClienteAppService _clienteAppService;
 
         // Exemplo de como você pode definir as roles
         private const string role = "Admin,Gestor";
 
-        public ClientesController()
+        public ClientesController(IClienteAppService clienteAppService)
         {
-            _clienteAppService = new ClienteAppService();
+            _clienteAppService = clienteAppService;
         }
 
         // GET: Clientes
@@ -27,8 +30,8 @@ namespace EP.CursoMvc.UI.Site.Controllers
         // area-administrativa/gestao-clientes/clientes/index
         [Route("")]
         [Route("listar-todos")]
-        // Estou abrindo uma excessão para deixar usuários não conectados listar os clientes
-        [AllowAnonymous]
+        // Usuários conectados com a claim de Clientes e o valor LI podem listar
+        [ClaimsAuthorize("Clientes", "LI")]
         public ActionResult Index()
         {
             return View(_clienteAppService.ObterAtivos());
@@ -39,6 +42,7 @@ namespace EP.CursoMvc.UI.Site.Controllers
         // A rota abaixo opcionalmente eu posso informar o tipo do id para proteger a aplicação de
         // text injections, evitando receber uma informação que vc não está preparado para tratar
         [Route("detalhes/{id:guid}")]
+        [ClaimsAuthorize("Clientes", "DE")]
         public ActionResult Details(Guid id)
         {
 
@@ -51,6 +55,7 @@ namespace EP.CursoMvc.UI.Site.Controllers
 
         // GET: Clientes/Create
         [Route("criar-novo")]
+        [ClaimsAuthorize("Clientes", "IN")]
         public ActionResult Create()
         {
             return View();
@@ -62,17 +67,23 @@ namespace EP.CursoMvc.UI.Site.Controllers
         [Route("criar-novo")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ClaimsAuthorize("Clientes", "IN")]
         public ActionResult Create(ClienteEnderecoViewModel clienteEndereco)
         {
             if (!ModelState.IsValid) return View(clienteEndereco);
 
-            _clienteAppService.Adicionar(clienteEndereco);
+            clienteEndereco = _clienteAppService.Adicionar(clienteEndereco);
 
-            return RedirectToAction("Index");
+            if(clienteEndereco.Cliente.ValidationResult.IsValid) return RedirectToAction("Index");
+
+            PopularModelStateComErros(clienteEndereco.Cliente.ValidationResult);
+
+            return View(clienteEndereco);
         }
 
         // GET: Clientes/Edit/5
         [Route("{id:guid}/editar")]
+        [ClaimsAuthorize("Clientes", "ED")]
         public ActionResult Edit(Guid id)
         {
             var clienteViewModel = _clienteAppService.ObterPorId(id);
@@ -88,6 +99,7 @@ namespace EP.CursoMvc.UI.Site.Controllers
         [Route("{id:guid}/editar")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ClaimsAuthorize("Clientes", "ED")]
         public ActionResult Edit(ClienteViewModel clienteViewModel)
         {
             if (!ModelState.IsValid) return View(clienteViewModel);
@@ -101,6 +113,7 @@ namespace EP.CursoMvc.UI.Site.Controllers
         [Route("{id:guid}/excluir")]
         // Além de estar conectado, estou pedindo ou a role Admin ou a Role Gestor para o usuário
         [Authorize(Roles = role)]
+        [ClaimsAuthorize("Clientes", "EX")]
         public ActionResult Delete(Guid id)
         {
             var clienteViewModel = _clienteAppService.ObterPorId(id);
@@ -114,7 +127,7 @@ namespace EP.CursoMvc.UI.Site.Controllers
         [Route("{id:guid}/excluir")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = role)]
+        [ClaimsAuthorize("Clientes", "EX")]
         public ActionResult DeleteConfirmed(Guid id)
         {
             _clienteAppService.Remover(id);
