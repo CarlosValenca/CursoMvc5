@@ -104,13 +104,28 @@ namespace EP.CursoMvc.Application.Services
             // Aqui estamos extraindo o cliente de domínio
             var cliente = Mapper.Map<Cliente>(clienteViewModel);
             if (!cliente.EhValido()) return clienteViewModel;
-            _clienteService.Atualizar(cliente);
+
+            var clienteReturn = _clienteService.Atualizar(cliente);
+
+            if (clienteReturn.ValidationResult.IsValid)
+            {
+                if (!SaveChanges())
+                {
+                    AdicionarErrosValidacao(cliente.ValidationResult, "Ocorreu um erro no momento de salvar os dados no banco.");
+                }
+            }
+
+            // Em caso de erros estou devolvendo eles para a camada de apresentação na classe ClienteViewModel
+            clienteViewModel.ValidationResult = clienteReturn.ValidationResult;
+
             return clienteViewModel;
         }
 
         public void Remover(Guid id)
         {
             _clienteService.Remover(id);
+
+            SaveChanges();
         }
         public void Dispose()
         {

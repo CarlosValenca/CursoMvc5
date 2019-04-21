@@ -128,9 +128,93 @@ public override bool EhValido()
 }
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
+Criação de WebAPI
+
+Criação do Projeto do Tipo XXX Empty com a opção WebAPI selecionada
+
+Criação da controller com os métodos básicos escrita/leitura
+
+Substituição dos nomes de verbos http padrão pelos nomes específicos dos serviços que vc quer disponibilizar
+
+No GlobalAsa registrar o AutoMapper para que o serviço entenda as entidades
+
+Usar o Simple Injector na API : https://www.nuget.org/packages/SimpleInjector.Integration.WebApi.WebHost.QuickStart
+então no projeto 2 - Services\EP.CursoMvc.REST.ClienteAPI executar:
+
+Install-Package SimpleInjector.Integration.WebApi.WebHost.QuickStart
+
+Criar a conexão com o banco no WebConfig
+
+IMPORTANTE: O parâmetro directory utilizado na camada de apresentação que era representado pela pasta App_Data
+a WebAPI não tem o conhecimento deste caminho, portanto informar manualmente este caminho OU não utilizar
+um banco atachado
+
+Para testar marque o projeto da WebApi como Startup Project e execute o mesmo
+
+Irá aparecer uma página de erro
+
+Para você ver alguma coisa coloque: http://localhost:51839/api/clientes
+
+Fornecer um provider para o banco de dados, como estamos usando o EF vamos instalar ele:
+
+install-package entityframework
+
+Prover segurança para o seu serviço em 3 passos:
+
+HTTPS : Trafega dados de forma criptografada pela internet, evita ataques do tipo "Man in the Middle", que é uma pessoa estranha a aplicação
+que liga um aparelho chamado pineaple com a aplicação sniffer, para capturar os pacotes enviados pela sua aplicação, e ele pode substituir
+por informações que ele entender ser melhor, pegar informações sensíveis como cartão de crédito, senhas, etc
+
+Identity : https://docs.microsoft.com/pt-br/aspnet/web-api/overview/security/individual-accounts-in-web-api
+
+O tráfego pela internet não é pela senha, o javascript recebe a senha e o usuário recebe um token para passar a trabalhar de forma
+protegida
+
+CORs : Cross Origin Request (Requisição de Outras Origens) - https://docs.microsoft.com/pt-br/aspnet/web-api/overview/security/enabling-cross-origin-requests-in-web-api
+
+Para que a sua aplicação seja consumida de origens externas vc precisa habilitar o CORs
+
+Para instalar o CORs: Install-Package Microsoft.AspNet.WebApi.Cors
+
+No WebApiConfig da pasta App_Start habilitar o CORs instalado:
+
+config.EnableCors();
+
+Decorar a controller para informar o tipo de request que sua aplicação irá aceitar:
+
+Aceita requests do site mywebclient.azurewebsites.net, de qualquer header e método
+Ex: [EnableCors(origins: "http://mywebclient.azurewebsites.net", headers: "*", methods: "*")]
+
+Aceita requests de qualquer site, header e método
+Ex: [EnableCors(origins: "*", headers: "*", methods: "*")]
+
+Aceita requests de qualquer site, header e método GET e POST somente
+Ex: [EnableCors(origins: "*", headers: "*", methods: "GET,POST")]
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Artigo muito importante para fazer o Code First a partir de uma base existente:
+
+https://www.eduardopires.net.br/2015/04/descentralize-o-banco-de-dados-de-suas-aplicacoes/
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------
+Tests
+
+Para verificar quantos % da sua aplicação foi testada utilizar o analyze code coverage se você tiver sorte de ter a versão
+enterprise do Visual Studio :(
+Esta ferramenta é sensacional !!!!
+Vc pode ver quantos % do seu código foi atingido nos testes, realmente vale a pena.
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Deploy
+
+Utilizar a opção Publish sobre o projeto MVC ou de Serviço
+
+Veja exemplo de opções no arquivo: publish_recommended_options_to_work_locally.jpg
+
+Colar os arquivos de publish dentro da pasta wwwroot se vc tiver o IIS instalado (deploy manual - mais seguro)
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------------------------------------------------

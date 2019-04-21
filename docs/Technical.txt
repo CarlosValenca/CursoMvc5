@@ -56,7 +56,13 @@ https://simpleinjector.org/index.html
 
 5\5.2 - CrossCutting\EP.CursoMvc.Infra.CrossCutting.IoC: Install-Package SimpleInjector
 
-10) Implementar em 4 - Domain\EP.CursoMvc.Domain e 3 - Application\EP.CursoMvc.Application e na 1 - Presentation\EP.CursoMvc.UI.Site o seguinte comando e no 5.1 - Data\EP.CursoMvc.Infra.Data:
+10) Implementar em 4 - Domain\EP.CursoMvc.Domain e 3 - Application\EP.CursoMvc.Application e na 1 - Presentation\EP.CursoMvc.UI.Site o seguinte comando
+e no 5.1 - Data\EP.CursoMvc.Infra.Data e no 2 - Services\EP.CursoMvc.REST.ClienteApi e 6 - Tests\EP.CursoMvc.Domain.Tests:
 
 Install-Package DomainValidation
 
+11) Para a WebApi consultar o arquivo Explanations, está tudo em detalhes lá
+
+12) Para a camada de 06 - Tests\EP.CursoMvc.Domain.Tests instalar
+
+install-package RhinoMocks (ajuda a montar MOQs para testes)

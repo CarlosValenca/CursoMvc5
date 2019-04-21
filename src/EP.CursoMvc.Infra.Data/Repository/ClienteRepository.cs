@@ -44,7 +44,7 @@ namespace EP.CursoMvc.Infra.Data.Repository
             // Consulte explanations.txt para maiores detalhes sobre o EF e o Dapper
 
             var sql = @"select * from clientes c left join enderecos e " +
-                       "on c.id = e.clienteid and c.id = @uid and c.excluido = 0 and c.ativo = 1";
+                       "on c.id = e.clienteid where c.id = @uid and c.excluido = 0 and c.ativo = 1";
 
             return Db.Database.Connection.Query<Cliente, Endereco, Cliente>(sql,
                 (c, e) =>
