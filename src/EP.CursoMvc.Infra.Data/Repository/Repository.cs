@@ -14,9 +14,9 @@ namespace EP.CursoMvc.Infra.Data.Repository
         protected CursoMvcContext Db;
         protected DbSet<TEntity> DbSet;
 
-        protected Repository()
+        protected Repository(CursoMvcContext context)
         {
-            Db = new CursoMvcContext();
+            Db = context;
             // Estou criando um atalho no construtor desta classe para facilitar o uso do contexto
             DbSet = Db.Set<TEntity>();
         }
@@ -24,7 +24,6 @@ namespace EP.CursoMvc.Infra.Data.Repository
         public virtual void Adicionar(TEntity obj)
         {
             DbSet.Add(obj);
-            SaveChanges();
         }
 
         public virtual void Atualizar(TEntity obj)
@@ -33,16 +32,12 @@ namespace EP.CursoMvc.Infra.Data.Repository
             var entry = Db.Entry(obj);
             DbSet.Attach(obj);
             entry.State = EntityState.Modified;
-
-            SaveChanges();
         }
 
         public virtual void Remover(Guid id)
         {
             var entity = new TEntity { Id = id };
             DbSet.Remove(entity);
-
-            SaveChanges();
         }
 
         public IEnumerable<TEntity> Buscar(Expression<Func<TEntity, bool>> predicate)

@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using EP.CursoMvc.Domain.Interfaces;
 using EP.CursoMvc.Domain.Models;
+using EP.CursoMvc.Infra.Data.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace EP.CursoMvc.Infra.Data.Repository
     // Cliente Repository faz tudo que o Repository faz + as especificidades desta classe
     public class ClienteRepository : Repository<Cliente>, IClienteRepository
     {
+        public ClienteRepository(CursoMvcContext context) : base(context) {}
         public IEnumerable<Cliente> ObterAtivos()
         {
             // 0 = False; 1 = True;

@@ -1,4 +1,5 @@
-﻿using EP.CursoMvc.Domain.Models;
+﻿using DomainValidation.Validation;
+using EP.CursoMvc.Domain.Models;
 using EP.CursoMvc.Infra.Data.Mappings;
 using System;
 using System.Data.Entity;
@@ -52,6 +53,8 @@ namespace EP.CursoMvc.Infra.Data.Context
             // Obedeçe as instruções deste arquivo e utiliza as instruções dos arquivos de mapping ClienteMapping/EnderecoMapping
             modelBuilder.Configurations.Add(new ClienteMapping());
             modelBuilder.Configurations.Add(new EnderecoMapping());
+
+            modelBuilder.Ignore<ValidationResult>();
 
             base.OnModelCreating(modelBuilder);
         }

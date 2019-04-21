@@ -16,12 +16,14 @@ namespace EP.CursoMvc.Domain.Validations.Clientes
 
             // Aqui temos exemplos usando uma classe bem genérica, detalhes em GenericSpecification
             var clienteNomeCurto = new GenericSpecification<Cliente>(c => c.Nome.Length >= 2);
+            var clienteEmailVazio = new GenericSpecification<Cliente>(c => !string.IsNullOrEmpty(c.Email));
             var CPFCliente = new GenericSpecification<Cliente>(c => CPF.Validar(c.CPF));
 
             Add("CPFCliente", new Rule<Cliente>(CPFCliente, "Cliente informou um CPF inválido"));
             Add("clienteEmail", new Rule<Cliente>(clienteEmail, "Cliente informou um E-mail inválido"));
             Add("clienteMaiorIdade", new Rule<Cliente>(clienteMaiorIdade, "Cliente precisa ser maior de idade"));
             Add("clienteNomeCurto", new Rule<Cliente>(clienteNomeCurto, "O nome do cliente precisa ter mais de 2 caracteres"));
+            Add("clienteEmailVazio", new Rule<Cliente>(clienteEmailVazio, "O e-mail do cliente não pode estar em branco"));
         }
     }
 }

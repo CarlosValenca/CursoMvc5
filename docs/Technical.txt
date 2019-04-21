@@ -56,7 +56,7 @@ https://simpleinjector.org/index.html
 
 5\5.2 - CrossCutting\EP.CursoMvc.Infra.CrossCutting.IoC: Install-Package SimpleInjector
 
-10) Implementar em 4 - Domain\EP.CursoMvc.Domain e 3 - Application\EP.CursoMvc.Application e na 1 - Presentation\EP.CursoMvc.UI.Site o seguinte comando:
+10) Implementar em 4 - Domain\EP.CursoMvc.Domain e 3 - Application\EP.CursoMvc.Application e na 1 - Presentation\EP.CursoMvc.UI.Site o seguinte comando e no 5.1 - Data\EP.CursoMvc.Infra.Data:
 
 Install-Package DomainValidation
 

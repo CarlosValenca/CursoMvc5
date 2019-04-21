@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DomainValidation.Validation;
 using EP.CursoMvc.Application.Interfaces;
 using EP.CursoMvc.Application.ViewModels;
 using EP.CursoMvc.Domain.Interfaces;
@@ -15,7 +16,8 @@ namespace EP.CursoMvc.Application.Services
         private readonly IClienteService _clienteService;
 
         public ClienteAppService(IClienteRepository clienteRepository,
-                                 IClienteService clienteService)
+                                 IClienteService clienteService,
+                                 IUnitOfWork uow) : base(uow)
         {
             _clienteRepository = clienteRepository;
             _clienteService = clienteService;
@@ -72,11 +74,27 @@ namespace EP.CursoMvc.Application.Services
 
             var clienteReturn = _clienteService.Adicionar(cliente);
 
-            if(!clienteReturn.ValidationResult.IsValid)
+            //BeginTransaction();
+            //// chamar proc de banco etc...
+            //try
+            //{
+            //    Commit();
+            //}
+            //catch (Exception)
+            //{
+            //    Rollback();
+            //}
+
+            if(clienteReturn.ValidationResult.IsValid)
             {
-                // Em caso de erros estou devolvendo eles para a camada de apresentação na classe ClienteViewModel
-                clienteEnderecoViewModel.Cliente.ValidationResult = clienteReturn.ValidationResult;
+                if(!SaveChanges())
+                {
+                    AdicionarErrosValidacao(cliente.ValidationResult,"Ocorreu um erro no momento de salvar os dados no banco.");
+                }
             }
+
+            // Em caso de erros estou devolvendo eles para a camada de apresentação na classe ClienteViewModel
+            clienteEnderecoViewModel.Cliente.ValidationResult = clienteReturn.ValidationResult;
 
             return clienteEnderecoViewModel;
         }
@@ -99,8 +117,6 @@ namespace EP.CursoMvc.Application.Services
             // Controller terminou de usar, mata app service que mata o repository que mata o contexto do banco de dados
             // para que a memória fique melhor gerenciada
             _clienteRepository.Dispose();
-            // ssbcvp - confirmar se deixa ou não este código
-            _clienteService.Dispose();
         }
 
     }

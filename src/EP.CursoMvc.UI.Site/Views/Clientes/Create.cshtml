@@ -1,6 +1,4 @@
-﻿@* ssbcvp - Parei no vídeo 2 - 03:00:00, rever a parte do filtro *@
-
-@model EP.CursoMvc.Application.ViewModels.ClienteEnderecoViewModel
+﻿@model EP.CursoMvc.Application.ViewModels.ClienteEnderecoViewModel
 
 @{
     ViewBag.Title = "Adicionar Novo Cliente";
@@ -17,7 +15,9 @@
     <br />
     <h4>Dados do Cliente</h4>
     <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @Html.Partial("_ErrorSummary")
+
     <div class="form-group">
         @Html.LabelFor(model => model.Cliente.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">

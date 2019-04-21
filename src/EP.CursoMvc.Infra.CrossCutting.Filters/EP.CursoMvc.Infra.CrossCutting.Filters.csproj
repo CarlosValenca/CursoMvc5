@@ -72,5 +72,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EP.CursoMvc.Infra.Data\EP.CursoMvc.Infra.Data.csproj">
+      <Project>{fd32b3e6-af23-451f-9b0b-187befe175c0}</Project>
+      <Name>EP.CursoMvc.Infra.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
